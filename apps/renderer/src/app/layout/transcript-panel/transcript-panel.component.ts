@@ -38,6 +38,8 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
   isRecordingElsewhere = false;
   editingSegmentId: string | null = null;
   editingText = '';
+  showFullTranscript = false;
+  copied = false;
   private readonly session = inject(SessionService);
   private readonly ipc = inject(ElectronIpcService);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -141,6 +143,32 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+  }
+
+  openFullTranscript(): void {
+    this.showFullTranscript = true;
+    this.copied = false;
+    this.cdr.markForCheck();
+  }
+
+  closeFullTranscript(): void {
+    this.showFullTranscript = false;
+    this.cdr.markForCheck();
+  }
+
+  get fullTranscriptText(): string {
+    return this.segments.map((s) => s.text).join('\n\n');
+  }
+
+  copyTranscript(): void {
+    navigator.clipboard.writeText(this.fullTranscriptText).then(() => {
+      this.copied = true;
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        this.copied = false;
+        this.cdr.markForCheck();
+      }, 2000);
+    });
   }
 
   goToRecordingSession(): void {
