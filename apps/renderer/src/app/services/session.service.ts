@@ -331,7 +331,7 @@ export class SessionService implements OnDestroy {
     // Save immediately to create the session in the list
     this.saveSessionImmediate();
 
-    await this.audioCapture.startRecording(deviceId);
+    await this.audioCapture.startRecording(deviceId, undefined, currentId);
   }
 
   /** Save session immediately (bypasses debounce) */

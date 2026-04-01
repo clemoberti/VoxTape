@@ -28,7 +28,7 @@ export interface DiarizationResult {
 interface VoxTapeApi {
   audio: {
     sendChunk(samples: number[]): void;
-    startRecording(): void;
+    startRecording(sessionId?: string): void;
     stopRecording(): void;
   };
   transcript: {
@@ -132,8 +132,8 @@ export class ElectronIpcService {
     this.api?.audio.sendChunk(Array.from(samples));
   }
 
-  startRecording(): void {
-    this.api?.audio.startRecording();
+  startRecording(sessionId?: string): void {
+    this.api?.audio.startRecording(sessionId);
   }
 
   stopRecording(): void {

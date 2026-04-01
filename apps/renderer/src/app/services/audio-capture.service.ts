@@ -75,7 +75,7 @@ export class AudioCaptureService implements OnDestroy {
     }
   }
 
-  async startRecording(deviceId?: string, systemAudio?: boolean): Promise<void> {
+  async startRecording(deviceId?: string, systemAudio?: boolean, sessionId?: string): Promise<void> {
     if (this._isRecording$.value) return;
 
     // Auto-detect system audio preference from config if not explicitly passed
@@ -167,7 +167,7 @@ export class AudioCaptureService implements OnDestroy {
         this.systemAudioActive = true;
       }
 
-      this.ipc.startRecording();
+      this.ipc.startRecording(sessionId);
       this._isRecording$.next(true);
     } catch (err) {
       console.error('[AudioCaptureService] Failed to start recording:', err);
