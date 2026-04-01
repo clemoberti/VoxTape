@@ -126,6 +126,11 @@ export class SessionService implements OnDestroy {
       .map((s) => s.text).join('\n\n');
   }
 
+  getSegmentsWithTimestamps(formatTime: (ms: number) => string): string {
+    return [...this._loadedSegments$.value, ...this._liveSegments$.value]
+      .map((s) => `[${formatTime(s.startTimeMs)}] ${s.text}`).join('\n');
+  }
+
   readonly recordingSessionId$: Observable<string | null> = this._recordingSessionId$.asObservable();
   readonly userNotes$: Observable<string> = this._userNotes$.asObservable();
   readonly title$: Observable<string> = this._title$.asObservable();

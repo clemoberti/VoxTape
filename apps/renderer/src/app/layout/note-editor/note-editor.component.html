@@ -122,7 +122,12 @@
         </div>
       </div>
       <div class="modal-body">
-        {{ session.getSegmentsText() }}
+        @for (seg of (session.segments$ | async) || []; track seg.id) {
+          <div class="modal-segment">
+            <span class="modal-segment-time">{{ formatTime(seg.startTimeMs) }}</span>
+            <span class="modal-segment-text">{{ seg.text }}</span>
+          </div>
+        }
       </div>
     </div>
   </div>

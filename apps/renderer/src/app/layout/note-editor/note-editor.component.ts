@@ -255,7 +255,7 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   copyTranscript(): void {
-    const text = this.session.getSegmentsText();
+    const text = this.session.getSegmentsWithTimestamps(this.formatTime.bind(this));
     navigator.clipboard.writeText(text).then(() => {
       this.copied = true;
       this.cdr.markForCheck();
