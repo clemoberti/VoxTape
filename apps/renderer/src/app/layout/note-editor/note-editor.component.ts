@@ -35,13 +35,17 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() loupeClicked = new EventEmitter<string[]>();
 
   title = '';
+  hasSegments = false;
+  audioPath: string | null = null;
+  showFullTranscript = false;
+  copied = false;
   aiSummary = '';
   renderedSummary = '';
   showHistory = false;
   summaryHistory: Array<{ id: number; summary: string; directive: string | null; createdAt: number }> = [];
   enhanceProgress: EnhanceProgress | null = null;
   progressPercent = 0;
-  private readonly session = inject(SessionService);
+  readonly session = inject(SessionService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly translate = inject(TranslateService);
   private editor: Editor | null = null;
@@ -55,6 +59,14 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.subs.push(
+      this.session.segments$.subscribe((segs) => {
+        this.hasSegments = segs.length > 0;
+        this.cdr.markForCheck();
+      }),
+      this.session.audioPath$.subscribe((path) => {
+        this.audioPath = path;
+        this.cdr.markForCheck();
+      }),
       this.session.title$.subscribe((t) => (this.title = t)),
       this.session.aiSummary$.subscribe((summary) => {
         setTimeout(() => {
@@ -195,6 +207,28 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.aiSummary = markdown;
     this._summaryEdit$.next(markdown);
     this.cdr.markForCheck();
+  }
+
+  @Output() listenRequested = new EventEmitter<void>();
+
+  openFullTranscript(): void {
+    this.showFullTranscript = true;
+    this.copied = false;
+    this.cdr.markForCheck();
+  }
+
+  closeFullTranscript(): void {
+    this.showFullTranscript = false;
+    this.cdr.markForCheck();
+  }
+
+  copyTranscript(): void {
+    const text = this.session.getSegmentsText();
+    navigator.clipboard.writeText(text).then(() => {
+      this.copied = true;
+      this.cdr.markForCheck();
+      setTimeout(() => { this.copied = false; this.cdr.markForCheck(); }, 2000);
+    });
   }
 
   onTitleChange(event: Event): void {

@@ -120,6 +120,12 @@ export class SessionService implements OnDestroy {
 
   readonly id$: Observable<string> = this._id$.asObservable();
   get currentSessionId(): string { return this._id$.value; }
+
+  getSegmentsText(): string {
+    return [...this._loadedSegments$.value, ...this._liveSegments$.value]
+      .map((s) => s.text).join('\n\n');
+  }
+
   readonly recordingSessionId$: Observable<string | null> = this._recordingSessionId$.asObservable();
   readonly userNotes$: Observable<string> = this._userNotes$.asObservable();
   readonly title$: Observable<string> = this._title$.asObservable();

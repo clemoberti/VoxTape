@@ -1,11 +1,27 @@
 <div class="editor-container">
-  <input
-    class="title-input"
-    type="text"
-    [value]="title"
-    (input)="onTitleChange($event)"
-    [placeholder]="'notes.titlePlaceholder' | translate"
-  />
+  <div class="title-row">
+    <input
+      class="title-input"
+      type="text"
+      [value]="title"
+      (input)="onTitleChange($event)"
+      [placeholder]="'notes.titlePlaceholder' | translate"
+    />
+    <div class="session-actions">
+      @if (hasSegments) {
+        <button class="action-btn" (click)="openFullTranscript()" [title]="'transcript.viewFull' | translate">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          {{ 'transcript.viewFull' | translate }}
+        </button>
+      }
+      @if (audioPath) {
+        <button class="action-btn" (click)="listenRequested.emit()" [title]="'transcript.listen' | translate">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          {{ 'transcript.listen' | translate }}
+        </button>
+      }
+    </div>
+  </div>
 
   <!-- Enhance progress overlay -->
   @if (enhanceProgress) {
@@ -62,3 +78,22 @@
     [class.hidden]="!!aiSummary"
   ></div>
 </div>
+
+@if (showFullTranscript) {
+  <div class="modal-overlay" (click)="closeFullTranscript()" (keydown.escape)="closeFullTranscript()" tabindex="0" role="dialog">
+    <div class="modal-content transcript-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ 'transcript.fullTranscript' | translate }}</h2>
+        <div class="modal-header-actions">
+          <button class="modal-btn copy" (click)="copyTranscript()">
+            {{ copied ? ('transcript.copied' | translate) : ('transcript.copy' | translate) }}
+          </button>
+          <button class="modal-btn close" (click)="closeFullTranscript()">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        {{ session.getSegmentsText() }}
+      </div>
+    </div>
+  </div>
+}
