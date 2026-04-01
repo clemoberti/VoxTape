@@ -2,6 +2,8 @@ import {
   app,
   BrowserWindow,
   ipcMain,
+  net,
+  protocol,
   session,
   safeStorage,
   Tray,
@@ -972,7 +974,18 @@ function setupIpc(): void {
 
 // ── App Lifecycle ──────────────────────────────────────────────────────────
 
+// Register custom protocol for audio playback
+protocol.registerSchemesAsPrivileged([
+  { scheme: 'voxtape-audio', privileges: { stream: true, supportFetchAPI: true } },
+]);
+
 app.whenReady().then(async () => {
+  // Handle voxtape-audio:// protocol for serving local audio files
+  protocol.handle('voxtape-audio', (request) => {
+    const filePath = decodeURIComponent(request.url.replace('voxtape-audio://', ''));
+    return net.fetch(`file://${filePath}`);
+  });
+
   // Bootstrap NestJS services
   await bootstrapNest();
 

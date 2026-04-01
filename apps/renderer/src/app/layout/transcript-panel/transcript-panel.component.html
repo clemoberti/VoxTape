@@ -1,7 +1,7 @@
 <div class="transcript-panel">
   @if (audioPath) {
     <div class="audio-player">
-      <audio #audioEl [src]="'file://' + audioPath" preload="metadata"></audio>
+      <audio #audioEl [src]="'voxtape-audio://' + audioPath" preload="metadata"></audio>
       <button class="play-btn" (click)="audioEl.paused ? audioEl.play() : audioEl.pause()">
         {{ audioEl.paused ? '&#9654;' : '&#10074;&#10074;' }}
       </button>
