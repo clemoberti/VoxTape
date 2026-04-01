@@ -30,6 +30,7 @@ interface VoxTapeApi {
     sendChunk(samples: number[]): void;
     startRecording(sessionId?: string): void;
     stopRecording(): void;
+    onRecordingSaved(cb: (audioPath: string) => void): () => void;
   };
   transcript: {
     onSegment(cb: (segment: TranscriptSegment) => void): () => void;
@@ -73,8 +74,10 @@ export class ElectronIpcService {
   private readonly _systemAudioCapturing$ = new BehaviorSubject<boolean>(false);
   private readonly _diarizationStatus$ = new BehaviorSubject<DiarizationStatus>('loading');
   private readonly _diarizationResult$ = new Subject<DiarizationResult>();
+  private readonly _recordingSaved$ = new Subject<string>();
 
   readonly sttStatus$: Observable<'loading' | 'ready' | 'error'> = this._sttStatus$.asObservable();
+  readonly recordingSaved$: Observable<string> = this._recordingSaved$.asObservable();
   readonly speechDetected$: Observable<boolean> = this._speechDetected$.asObservable();
   readonly segment$: Observable<TranscriptSegment> = this._segment$.asObservable();
   readonly partial$: Observable<{ text: string }> = this._partial$.asObservable();
@@ -121,6 +124,10 @@ export class ElectronIpcService {
 
     this.api.diarization?.onResult((result) => {
       this.ngZone.run(() => this._diarizationResult$.next(result));
+    });
+
+    this.api.audio.onRecordingSaved((audioPath) => {
+      this.ngZone.run(() => this._recordingSaved$.next(audioPath));
     });
   }
 

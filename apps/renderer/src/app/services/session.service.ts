@@ -235,6 +235,14 @@ export class SessionService implements OnDestroy {
     // Setup computed observables first
     this.setupComputedObservables();
 
+    // Listen for audio recording saved events
+    this.ipc.recordingSaved$
+      .pipe(takeUntil(this._destroy$))
+      .subscribe((audioPath: string) => {
+        this._audioPath$.next(audioPath);
+        this.requestSave();
+      });
+
     // Subscribe to incoming transcript segments - add to live segments if recording or draining
     // Includes deduplication to avoid showing same content from mic + system audio
     this.ipc.segment$
@@ -353,6 +361,7 @@ export class SessionService implements OnDestroy {
       segments,
       aiNotes: this._aiNotes$.value,
       aiSummary: this._aiSummary$.value,
+      audioPath: this._audioPath$.value,
       chatMessages: this._chatMessages$.value,
       durationMs: elapsed,
       createdAt: this.recordingStartTime || Date.now(),
@@ -756,6 +765,7 @@ export class SessionService implements OnDestroy {
       segments,
       aiNotes: this._aiNotes$.value,
       aiSummary: this._aiSummary$.value,
+      audioPath: this._audioPath$.value,
       chatMessages: this._chatMessages$.value,
       durationMs: elapsed,
       createdAt: this.recordingStartTime || Date.now(),
