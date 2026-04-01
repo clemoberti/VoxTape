@@ -66,6 +66,14 @@
     );
   }
 
+  &:hover::-webkit-slider-runnable-track {
+    background: linear-gradient(
+      to right,
+      var(--accent-primary) var(--seek-progress, 0%),
+      var(--border-subtle) var(--seek-progress, 0%)
+    );
+  }
+
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 12px;
