@@ -37,6 +37,11 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   title = '';
   hasSegments = false;
   audioPath: string | null = null;
+  showPlayer = false;
+  playerPlaying = false;
+  playerTime = 0;
+  playerDuration = 0;
+  private rafId: number | null = null;
   showFullTranscript = false;
   copied = false;
   aiSummary = '';
@@ -46,7 +51,7 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   enhanceProgress: EnhanceProgress | null = null;
   progressPercent = 0;
   readonly session = inject(SessionService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  readonly cdr = inject(ChangeDetectorRef);
   private readonly translate = inject(TranslateService);
   private editor: Editor | null = null;
   private subs: Subscription[] = [];
@@ -209,7 +214,28 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  @Output() listenRequested = new EventEmitter<void>();
+  formatTime(ms: number): string {
+    const totalSec = Math.floor(ms / 1000);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+  }
+
+  startRaf(audioEl: HTMLAudioElement): void {
+    const update = () => {
+      this.playerTime = audioEl.currentTime;
+      this.cdr.markForCheck();
+      this.rafId = requestAnimationFrame(update);
+    };
+    this.rafId = requestAnimationFrame(update);
+  }
+
+  stopRaf(): void {
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+  }
 
   openFullTranscript(): void {
     this.showFullTranscript = true;

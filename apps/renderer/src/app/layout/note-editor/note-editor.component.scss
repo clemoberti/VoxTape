@@ -277,6 +277,86 @@
   }
 }
 
+// ── Inline audio player ─────────────────────────────────────
+
+.inline-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  margin-bottom: 12px;
+
+  audio { display: none; }
+}
+
+.play-btn {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border-subtle);
+  background: none;
+  color: var(--accent-primary);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  &:hover {
+    border-color: var(--accent-primary);
+  }
+}
+
+.player-time {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--text-secondary);
+  min-width: 36px;
+}
+
+.player-seek {
+  flex: 1;
+  height: 20px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-runnable-track {
+    height: 4px;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.6) var(--seek-progress, 0%),
+      var(--border-subtle) var(--seek-progress, 0%)
+    );
+  }
+
+  &:hover::-webkit-slider-runnable-track {
+    background: linear-gradient(
+      to right,
+      var(--accent-primary) var(--seek-progress, 0%),
+      var(--border-subtle) var(--seek-progress, 0%)
+    );
+  }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
+    background: var(--accent-primary);
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  &:hover::-webkit-slider-thumb {
+    width: 12px;
+    height: 12px;
+    margin-top: -4px;
+  }
+}
+
 // ── Full transcript modal ───────────────────────────────────
 
 .modal-overlay {
