@@ -319,12 +319,14 @@
   height: 20px;
   -webkit-appearance: none;
   appearance: none;
-  background: transparent;
+  background: none;
   outline: none;
   cursor: pointer;
+  margin: 0;
 
   &::-webkit-slider-runnable-track {
     height: 4px;
+    border-radius: 0;
     background: linear-gradient(
       to right,
       rgba(255, 255, 255, 0.6) var(--seek-progress, 0%),

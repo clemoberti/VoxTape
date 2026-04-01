@@ -29,7 +29,8 @@
         #audioEl
         [src]="'voxtape-audio://audio' + audioPath"
         preload="metadata"
-        (loadedmetadata)="playerDuration = audioEl.duration || 0; cdr.markForCheck()"
+        (loadedmetadata)="playerDuration = isFinite(audioEl.duration) ? audioEl.duration : 0; cdr.markForCheck()"
+        (durationchange)="playerDuration = isFinite(audioEl.duration) ? audioEl.duration : 0; cdr.markForCheck()"
         (ended)="playerPlaying = false; playerTime = 0; stopRaf(); cdr.markForCheck()"
         (play)="playerPlaying = true; startRaf(audioEl); cdr.markForCheck()"
         (pause)="playerPlaying = false; stopRaf(); cdr.markForCheck()"
@@ -48,7 +49,7 @@
         [style.--seek-progress]="playerDuration ? (playerTime / playerDuration * 100) + '%' : '0%'"
         (input)="audioEl.currentTime = $any($event.target).value; playerTime = $any($event.target).value"
       />
-      <span class="player-time">{{ formatTime(playerDuration * 1000) }}</span>
+      <span class="player-time">{{ playerDuration > 0 ? formatTime(playerDuration * 1000) : '--:--' }}</span>
     </div>
   }
 
