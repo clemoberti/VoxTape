@@ -43,6 +43,7 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
   audioCurrentTime = 0;
   audioDuration = 0;
   isRetranscribing = false;
+  private audioRafId: number | null = null;
   private readonly session = inject(SessionService);
   private readonly ipc = inject(ElectronIpcService);
   readonly cdr = inject(ChangeDetectorRef);
@@ -97,6 +98,7 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
 
   ngOnDestroy(): void {
     this.subs.forEach((s) => s.unsubscribe());
+    this.stopAudioRaf();
   }
 
   isHighlighted(segmentId: string): boolean {
@@ -155,14 +157,15 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
   togglePlay(audioEl: HTMLAudioElement): void {
     if (audioEl.paused) {
       audioEl.play();
+      this.startAudioRaf(audioEl);
     } else {
       audioEl.pause();
+      this.stopAudioRaf();
     }
   }
 
-  onAudioTimeUpdate(audioEl: HTMLAudioElement): void {
-    this.audioCurrentTime = audioEl.currentTime;
-    this.cdr.markForCheck();
+  onAudioTimeUpdate(_audioEl: HTMLAudioElement): void {
+    // Handled by RAF for smoother updates
   }
 
   onAudioLoaded(audioEl: HTMLAudioElement): void {
@@ -173,7 +176,24 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
   onAudioEnded(): void {
     this.audioPlaying = false;
     this.audioCurrentTime = 0;
+    this.stopAudioRaf();
     this.cdr.markForCheck();
+  }
+
+  private startAudioRaf(audioEl: HTMLAudioElement): void {
+    const update = () => {
+      this.audioCurrentTime = audioEl.currentTime;
+      this.cdr.markForCheck();
+      this.audioRafId = requestAnimationFrame(update);
+    };
+    this.audioRafId = requestAnimationFrame(update);
+  }
+
+  private stopAudioRaf(): void {
+    if (this.audioRafId !== null) {
+      cancelAnimationFrame(this.audioRafId);
+      this.audioRafId = null;
+    }
   }
 
   seekAudio(audioEl: HTMLAudioElement, value: number): void {

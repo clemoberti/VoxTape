@@ -57,14 +57,26 @@
   outline: none;
   cursor: pointer;
 
+  &::-webkit-slider-runnable-track {
+    height: 4px;
+    background: var(--border-subtle);
+  }
+
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
     width: 12px;
     height: 12px;
+    margin-top: -4px;
     background: var(--accent-primary);
     border: none;
     border-radius: 0;
     cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+
+  &:hover::-webkit-slider-thumb {
+    transform: scale(1.3);
+    box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
   }
 }
 
