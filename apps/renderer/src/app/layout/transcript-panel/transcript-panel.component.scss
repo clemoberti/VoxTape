@@ -50,10 +50,10 @@
 
 .seek-bar {
   width: 100%;
-  height: 4px;
+  height: 20px;
   -webkit-appearance: none;
   appearance: none;
-  background: var(--border-subtle);
+  background: transparent;
   outline: none;
   cursor: pointer;
 
