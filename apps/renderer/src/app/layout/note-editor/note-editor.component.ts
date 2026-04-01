@@ -214,6 +214,12 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
+  onDurationChange(audioEl: HTMLAudioElement): void {
+    const d = audioEl.duration;
+    this.playerDuration = (d && Number.isFinite(d)) ? d : 0;
+    this.cdr.markForCheck();
+  }
+
   formatTime(ms: number): string {
     const totalSec = Math.floor(ms / 1000);
     const min = Math.floor(totalSec / 60);

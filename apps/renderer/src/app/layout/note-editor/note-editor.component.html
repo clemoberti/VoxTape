@@ -29,8 +29,8 @@
         #audioEl
         [src]="'voxtape-audio://audio' + audioPath"
         preload="metadata"
-        (loadedmetadata)="playerDuration = isFinite(audioEl.duration) ? audioEl.duration : 0; cdr.markForCheck()"
-        (durationchange)="playerDuration = isFinite(audioEl.duration) ? audioEl.duration : 0; cdr.markForCheck()"
+        (loadedmetadata)="onDurationChange(audioEl)"
+        (durationchange)="onDurationChange(audioEl)"
         (ended)="playerPlaying = false; playerTime = 0; stopRaf(); cdr.markForCheck()"
         (play)="playerPlaying = true; startRaf(audioEl); cdr.markForCheck()"
         (pause)="playerPlaying = false; stopRaf(); cdr.markForCheck()"
