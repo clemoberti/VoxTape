@@ -1,19 +1,4 @@
 <div class="transcript-panel">
-  <div class="transcript-toolbar">
-    @if (segments.length > 0) {
-      <button class="toolbar-btn" (click)="openFullTranscript()" [title]="'transcript.viewFull' | translate">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-        {{ 'transcript.viewFull' | translate }}
-      </button>
-    }
-    @if (audioPath) {
-      <button class="toolbar-btn" [class.active]="showAudioPlayer" (click)="toggleAudioPlayer()" [title]="'transcript.listen' | translate">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        {{ 'transcript.listen' | translate }}
-      </button>
-    }
-  </div>
-
   @if (showAudioPlayer && audioPath) {
     <div class="audio-player">
       <audio

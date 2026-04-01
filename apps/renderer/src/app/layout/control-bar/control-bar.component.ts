@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, EventEmitter, Output, Input, ViewChild, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -22,6 +22,7 @@ import type { LlmStatus } from '@voxtape/shared-types';
   styleUrl: './control-bar.component.scss',
 })
 export class ControlBarComponent implements OnInit, OnDestroy {
+  @ViewChild('transcriptPanelRef') transcriptPanelRef: TranscriptPanelComponent | undefined;
   @Input() transcriptOpen = false;
   @Input() chatOpen = false;
   @Input() chatInitialPrompt = '';
