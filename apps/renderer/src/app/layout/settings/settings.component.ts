@@ -8,7 +8,6 @@ import { LanguageService, SupportedLanguage } from '../../services/language.serv
 import { GlossaryService, GlossaryEntry } from '../../services/glossary.service';
 import { ApiKeyInputComponent } from './api-key-input/api-key-input.component';
 import type { LlmProviderId, SttProviderId } from '@voxtape/shared-types';
-import { LLM_MODELS, STT_MODELS } from '@voxtape/shared-types';
 
 interface DownloadedModel {
   id: string;
@@ -104,8 +103,31 @@ export class SettingsComponent implements OnInit, OnDestroy {
     { value: 'local', labelKey: 'settings.providerLocal' },
     { value: 'deepgram', labelKey: 'settings.providerDeepgram' },
   ];
-  llmModels = LLM_MODELS;
-  sttModels = STT_MODELS;
+  llmModels: Record<string, { id: string; name: string }[]> = {
+    local: [],
+    openai: [
+      { id: 'gpt-4o', name: 'GPT-4o' },
+      { id: 'gpt-4o-mini', name: 'GPT-4o Mini' },
+      { id: 'gpt-4.1', name: 'GPT-4.1' },
+      { id: 'gpt-4.1-mini', name: 'GPT-4.1 Mini' },
+      { id: 'gpt-4.1-nano', name: 'GPT-4.1 Nano' },
+    ],
+    anthropic: [
+      { id: 'claude-sonnet-4-20250514', name: 'Claude Sonnet 4' },
+      { id: 'claude-haiku-4-5-20251001', name: 'Claude Haiku 4.5' },
+    ],
+    gemini: [
+      { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash' },
+      { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash' },
+    ],
+  };
+  sttModels: Record<string, { id: string; name: string }[]> = {
+    local: [],
+    deepgram: [
+      { id: 'nova-3', name: 'Nova 3' },
+      { id: 'nova-2', name: 'Nova 2' },
+    ],
+  };
 
   // App version (from Electron)
   appVersion = '';
