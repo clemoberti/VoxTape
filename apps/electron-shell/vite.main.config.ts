@@ -21,6 +21,7 @@ export default defineConfig({
         'reflect-metadata',
         'rxjs',
         '@voxtape/native-audio-capture',
+        'ws',
         ...builtinModules,
         ...builtinModules.map((m) => `node:${m}`),
       ],
