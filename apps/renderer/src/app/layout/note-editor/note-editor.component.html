@@ -116,7 +116,11 @@
       }
       <div class="modal-body">
         @for (seg of (session.segments$ | async) || []; track seg.id) {
-          <div class="modal-segment">
+          <div
+            class="modal-segment"
+            [class.active-segment]="isSegmentActive(seg)"
+            (click)="seekToSegmentMs(seg.startTimeMs)"
+          >
             <span class="modal-segment-time">{{ formatTime(seg.startTimeMs) }}</span>
             <span class="modal-segment-text">{{ seg.text }}</span>
           </div>

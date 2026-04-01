@@ -18,7 +18,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import { SessionService, EnhanceProgress } from '../../services/session.service';
+import { SessionService, EnhanceProgress, TranscriptSegment } from '../../services/session.service';
 import { AiBlock } from './ai-block.extension';
 import type { EnhancedNote } from '@voxtape/shared-types';
 
@@ -32,6 +32,7 @@ import type { EnhancedNote } from '@voxtape/shared-types';
 })
 export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('editorEl') editorElRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('modalAudioEl') modalAudioElRef?: ElementRef<HTMLAudioElement>;
   @Output() loupeClicked = new EventEmitter<string[]>();
 
   title = '';
@@ -234,6 +235,23 @@ export class NoteEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.rafId = requestAnimationFrame(update);
     };
     this.rafId = requestAnimationFrame(update);
+  }
+
+  isSegmentActive(seg: TranscriptSegment): boolean {
+    if (!this.playerPlaying) return false;
+    const currentMs = this.playerTime * 1000;
+    return currentMs >= seg.startTimeMs && currentMs < seg.endTimeMs;
+  }
+
+  seekToSegmentMs(startTimeMs: number): void {
+    const audioEl = this.modalAudioElRef?.nativeElement;
+    if (!audioEl) return;
+    const time = startTimeMs / 1000;
+    audioEl.currentTime = time;
+    this.playerTime = time;
+    if (audioEl.paused) {
+      audioEl.play();
+    }
   }
 
   stopRaf(): void {

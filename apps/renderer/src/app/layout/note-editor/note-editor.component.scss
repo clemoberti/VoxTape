@@ -446,6 +446,27 @@
   align-items: flex-start;
   gap: 0;
   margin-bottom: 4px;
+  padding: 4px 0;
+  cursor: pointer;
+  border-radius: 0;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &.active-segment {
+    background: rgba(74, 222, 128, 0.1);
+
+    .modal-segment-time {
+      opacity: 1;
+      color: var(--accent-primary);
+    }
+
+    .modal-segment-text {
+      color: #fff;
+    }
+  }
 }
 
 .modal-segment-time {
