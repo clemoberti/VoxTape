@@ -69,6 +69,10 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
       }),
       this.session.audioPath$.subscribe((path) => {
         this.audioPath = path;
+        this.audioPlaying = false;
+        this.audioCurrentTime = 0;
+        this.audioDuration = 0;
+        this.stopAudioRaf();
         this.cdr.markForCheck();
       }),
       this.session.isRecordingElsewhere$.subscribe((elsewhere) => {
