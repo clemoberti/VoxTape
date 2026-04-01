@@ -21,6 +21,7 @@
         [max]="audioDuration"
         [value]="audioCurrentTime"
         step="0.1"
+        [style.--seek-progress]="audioDuration ? (audioCurrentTime / audioDuration * 100) + '%' : '0%'"
         (input)="seekAudio(audioEl, $any($event.target).value)"
       />
       <span class="audio-time">{{ formatTime(audioCurrentTime * 1000) }} / {{ formatTime(audioDuration * 1000) }}</span>

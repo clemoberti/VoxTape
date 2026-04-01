@@ -57,9 +57,14 @@
   outline: none;
   cursor: pointer;
 
+  // Track uses a gradient to show played portion
   &::-webkit-slider-runnable-track {
     height: 4px;
-    background: var(--border-subtle);
+    background: linear-gradient(
+      to right,
+      var(--accent-primary) var(--seek-progress, 0%),
+      var(--border-subtle) var(--seek-progress, 0%)
+    );
   }
 
   &::-webkit-slider-thumb {
