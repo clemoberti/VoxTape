@@ -39,10 +39,13 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
   editingSegmentId: string | null = null;
   editingText = '';
   audioPath: string | null = null;
+  audioPlaying = false;
+  audioCurrentTime = 0;
+  audioDuration = 0;
   isRetranscribing = false;
   private readonly session = inject(SessionService);
   private readonly ipc = inject(ElectronIpcService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  readonly cdr = inject(ChangeDetectorRef);
   private readonly translate = inject(TranslateService);
   private subs: Subscription[] = [];
 
@@ -147,6 +150,35 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+  }
+
+  togglePlay(audioEl: HTMLAudioElement): void {
+    if (audioEl.paused) {
+      audioEl.play();
+    } else {
+      audioEl.pause();
+    }
+  }
+
+  onAudioTimeUpdate(audioEl: HTMLAudioElement): void {
+    this.audioCurrentTime = audioEl.currentTime;
+    this.cdr.markForCheck();
+  }
+
+  onAudioLoaded(audioEl: HTMLAudioElement): void {
+    this.audioDuration = audioEl.duration || 0;
+    this.cdr.markForCheck();
+  }
+
+  onAudioEnded(): void {
+    this.audioPlaying = false;
+    this.audioCurrentTime = 0;
+    this.cdr.markForCheck();
+  }
+
+  seekAudio(audioEl: HTMLAudioElement, value: number): void {
+    audioEl.currentTime = value;
+    this.audioCurrentTime = value;
   }
 
   async retranscribe(): Promise<void> {

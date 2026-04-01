@@ -976,13 +976,15 @@ function setupIpc(): void {
 
 // Register custom protocol for audio playback
 protocol.registerSchemesAsPrivileged([
-  { scheme: 'voxtape-audio', privileges: { stream: true, supportFetchAPI: true } },
+  { scheme: 'voxtape-audio', privileges: { standard: true, secure: true, stream: true, supportFetchAPI: true, bypassCSP: true } },
 ]);
 
 app.whenReady().then(async () => {
   // Handle voxtape-audio:// protocol for serving local audio files
   protocol.handle('voxtape-audio', (request) => {
-    const filePath = decodeURIComponent(request.url.replace('voxtape-audio://', ''));
+    // URL format: voxtape-audio://host/path — extract everything after the scheme
+    const url = new URL(request.url);
+    const filePath = decodeURIComponent(url.pathname);
     return net.fetch(`file://${filePath}`);
   });
 
