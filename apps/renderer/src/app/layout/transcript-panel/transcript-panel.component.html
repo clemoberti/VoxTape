@@ -54,12 +54,13 @@
   }
   <div class="segments-container" #scrollContainer>
     @for (segment of segments; track segment.id) {
-      <div
-        class="segment-block"
-        [attr.data-segment-id]="segment.id"
-        [class.highlighted]="isHighlighted(segment.id)"
-        [class.edited]="segment.isEdited"
-      >
+      <div class="segment-row" [attr.data-segment-id]="segment.id">
+        <span class="segment-time">{{ formatTime(segment.startTimeMs) }}</span>
+        <div
+          class="segment-block"
+          [class.highlighted]="isHighlighted(segment.id)"
+          [class.edited]="segment.isEdited"
+        >
         @if (editingSegmentId === segment.id) {
           <input
             class="segment-edit-input"
@@ -75,6 +76,7 @@
             [title]="segment.isEdited ? 'Original: ' + segment.originalText : ''"
           >{{ segment.text }}</span>
         }
+        </div>
       </div>
     }
 

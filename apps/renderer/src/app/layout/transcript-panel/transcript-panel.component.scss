@@ -190,7 +190,26 @@
   min-height: 0;
 }
 
+.segment-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.segment-time {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--text-secondary);
+  opacity: 0.4;
+  min-width: 44px;
+  padding: 9px 8px 0 4px;
+  flex-shrink: 0;
+  user-select: none;
+  text-align: right;
+}
+
 .segment-block {
+  flex: 1;
   padding: 8px 12px;
   border-radius: 0;
   background: rgba(255, 255, 255, 0.04);
