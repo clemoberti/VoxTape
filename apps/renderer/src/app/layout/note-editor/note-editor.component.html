@@ -121,6 +121,35 @@
           <button class="modal-btn close" (click)="closeFullTranscript()">&times;</button>
         </div>
       </div>
+      @if (audioPath) {
+        <div class="modal-player">
+          <audio
+            #modalAudioEl
+            [src]="'voxtape-audio://audio' + audioPath"
+            preload="metadata"
+            (loadedmetadata)="onDurationChange(modalAudioEl)"
+            (durationchange)="onDurationChange(modalAudioEl)"
+            (ended)="playerPlaying = false; playerTime = 0; stopRaf(); cdr.markForCheck()"
+            (play)="playerPlaying = true; startRaf(modalAudioEl); cdr.markForCheck()"
+            (pause)="playerPlaying = false; stopRaf(); cdr.markForCheck()"
+          ></audio>
+          <button class="play-btn" (click)="modalAudioEl.paused ? modalAudioEl.play() : modalAudioEl.pause()">
+            {{ playerPlaying ? '&#10074;&#10074;' : '&#9654;' }}
+          </button>
+          <span class="player-time">{{ formatTime(playerTime * 1000) }}</span>
+          <input
+            type="range"
+            class="player-seek"
+            [min]="0"
+            [max]="playerDuration"
+            [value]="playerTime"
+            step="0.1"
+            [style.--seek-progress]="playerDuration ? (playerTime / playerDuration * 100) + '%' : '0%'"
+            (input)="modalAudioEl.currentTime = $any($event.target).value; playerTime = $any($event.target).value"
+          />
+          <span class="player-time">{{ playerDuration > 0 ? formatTime(playerDuration * 1000) : '--:--' }}</span>
+        </div>
+      }
       <div class="modal-body">
         @for (seg of (session.segments$ | async) || []; track seg.id) {
           <div class="modal-segment">

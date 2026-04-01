@@ -425,6 +425,16 @@
   }
 }
 
+.modal-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 2px solid var(--border-subtle);
+
+  audio { display: none; }
+}
+
 .modal-body {
   padding: 16px;
   overflow-y: auto;
