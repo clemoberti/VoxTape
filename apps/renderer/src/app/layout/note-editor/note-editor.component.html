@@ -14,44 +14,8 @@
           {{ 'transcript.viewFull' | translate }}
         </button>
       }
-      @if (audioPath) {
-        <button class="action-btn" [class.active]="showPlayer" (click)="showPlayer = !showPlayer" [title]="'transcript.listen' | translate">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          {{ 'transcript.listen' | translate }}
-        </button>
-      }
     </div>
   </div>
-
-  @if (showPlayer && audioPath) {
-    <div class="inline-player">
-      <audio
-        #audioEl
-        [src]="'voxtape-audio://audio' + audioPath"
-        preload="metadata"
-        (loadedmetadata)="onDurationChange(audioEl)"
-        (durationchange)="onDurationChange(audioEl)"
-        (ended)="playerPlaying = false; playerTime = 0; stopRaf(); cdr.markForCheck()"
-        (play)="playerPlaying = true; startRaf(audioEl); cdr.markForCheck()"
-        (pause)="playerPlaying = false; stopRaf(); cdr.markForCheck()"
-      ></audio>
-      <button class="play-btn" (click)="audioEl.paused ? audioEl.play() : audioEl.pause()">
-        {{ playerPlaying ? '&#10074;&#10074;' : '&#9654;' }}
-      </button>
-      <span class="player-time">{{ formatTime(playerTime * 1000) }}</span>
-      <input
-        type="range"
-        class="player-seek"
-        [min]="0"
-        [max]="playerDuration"
-        [value]="playerTime"
-        step="0.1"
-        [style.--seek-progress]="playerDuration ? (playerTime / playerDuration * 100) + '%' : '0%'"
-        (input)="audioEl.currentTime = $any($event.target).value; playerTime = $any($event.target).value"
-      />
-      <span class="player-time">{{ playerDuration > 0 ? formatTime(playerDuration * 1000) : '--:--' }}</span>
-    </div>
-  }
 
   <!-- Enhance progress overlay -->
   @if (enhanceProgress) {
