@@ -1,5 +1,20 @@
 <div class="transcript-panel">
-  @if (audioPath) {
+  <div class="transcript-toolbar">
+    @if (segments.length > 0) {
+      <button class="toolbar-btn" (click)="openFullTranscript()" [title]="'transcript.viewFull' | translate">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        {{ 'transcript.viewFull' | translate }}
+      </button>
+    }
+    @if (audioPath) {
+      <button class="toolbar-btn" [class.active]="showAudioPlayer" (click)="toggleAudioPlayer()" [title]="'transcript.listen' | translate">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        {{ 'transcript.listen' | translate }}
+      </button>
+    }
+  </div>
+
+  @if (showAudioPlayer && audioPath) {
     <div class="audio-player">
       <audio
         #audioEl
@@ -14,6 +29,7 @@
       <button class="play-btn" (click)="togglePlay(audioEl)">
         {{ audioPlaying ? '&#10074;&#10074;' : '&#9654;' }}
       </button>
+      <span class="audio-time">{{ formatTime(audioCurrentTime * 1000) }}</span>
       <div class="seek-container" (mousemove)="onSeekHover($event)" (mouseleave)="seekTooltip = null">
         @if (seekTooltip) {
           <div class="seek-tooltip" [style.left.px]="seekTooltip.x">{{ seekTooltip.time }}</div>
@@ -29,7 +45,7 @@
           (input)="seekAudio(audioEl, $any($event.target).value)"
         />
       </div>
-      <span class="audio-time">{{ formatTime(audioCurrentTime * 1000) }} / {{ formatTime(audioDuration * 1000) }}</span>
+      <span class="audio-time">{{ formatTime(audioDuration * 1000) }}</span>
       <button
         class="retranscribe-btn"
         [disabled]="isRetranscribing"
@@ -40,6 +56,7 @@
       </button>
     </div>
   }
+
   @if (isRecordingElsewhere) {
     <div class="recording-elsewhere-banner"
       tabindex="0"
@@ -103,3 +120,24 @@
     }
   </div>
 </div>
+
+@if (showFullTranscript) {
+  <div class="modal-overlay" (click)="closeFullTranscript()" (keydown.escape)="closeFullTranscript()" tabindex="0" role="dialog">
+    <div class="modal-content transcript-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ 'transcript.fullTranscript' | translate }}</h2>
+        <div class="modal-header-actions">
+          <button class="modal-btn copy" (click)="copyTranscript()">
+            {{ copied ? ('transcript.copied' | translate) : ('transcript.copy' | translate) }}
+          </button>
+          <button class="modal-btn close" (click)="closeFullTranscript()">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        @for (segment of segments; track segment.id) {
+          <p class="transcript-line">{{ segment.text }}</p>
+        }
+      </div>
+    </div>
+  </div>
+}

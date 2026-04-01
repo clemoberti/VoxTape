@@ -43,6 +43,11 @@
     "loader2": "TRANSCRIBING...",
     "loader3": "DECODING AUDIO...",
     "loader4": "VOICE ANALYSIS...",
+    "viewFull": "Full transcript",
+    "fullTranscript": "Full Transcript",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "listen": "Listen",
     "retranscribe": "Re-transcribe",
     "retranscribing": "Re-transcribing..."
   },

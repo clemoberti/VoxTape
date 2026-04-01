@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(source \"$HOME/.cargo/env\")",
+      "Bash(source ~/.nvm/nvm.sh)",
+      "Bash(nvm use:*)",
+      "Bash(npm run:*)",
+      "Bash(git symbolic-ref:*)",
+      "Bash(NX_IGNORE_UNSUPPORTED_TS_SETUP=true npx nx build shared-types)",
+      "Bash(npx tsc:*)",
+      "Bash(NX_IGNORE_UNSUPPORTED_TS_SETUP=true npx nx build renderer)",
+      "Bash(git:*)",
+      "Bash(lsof -ti:4200)",
+      "Bash(xargs kill:*)",
+      "Bash(pkill -9 -f 'electron apps/electron-shell')",
+      "WebSearch",
+      "Bash(node apps/electron-shell/build.mjs)",
+      "Bash(npm test:*)"
+    ]
+  },
+  "disabledMcpjsonServers": [
+    "nx-mcp"
+  ],
+  "enabledPlugins": {
+    "compound-engineering@every-marketplace": true
+  }
+}

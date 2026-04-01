@@ -38,7 +38,10 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
   isRecordingElsewhere = false;
   editingSegmentId: string | null = null;
   editingText = '';
+  showFullTranscript = false;
+  copied = false;
   audioPath: string | null = null;
+  showAudioPlayer = false;
   audioPlaying = false;
   audioCurrentTime = 0;
   audioDuration = 0;
@@ -231,6 +234,45 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
       this.isRetranscribing = false;
       this.cdr.markForCheck();
     }
+  }
+
+  // ── Full Transcript Modal ──────────────────────────────────
+
+  openFullTranscript(): void {
+    this.showFullTranscript = true;
+    this.copied = false;
+    this.cdr.markForCheck();
+  }
+
+  closeFullTranscript(): void {
+    this.showFullTranscript = false;
+    this.cdr.markForCheck();
+  }
+
+  get fullTranscriptText(): string {
+    return this.segments.map((s) => s.text).join('\n\n');
+  }
+
+  copyTranscript(): void {
+    navigator.clipboard.writeText(this.fullTranscriptText).then(() => {
+      this.copied = true;
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        this.copied = false;
+        this.cdr.markForCheck();
+      }, 2000);
+    });
+  }
+
+  // ── Audio Player Toggle ────────────────────────────────────
+
+  toggleAudioPlayer(): void {
+    this.showAudioPlayer = !this.showAudioPlayer;
+    if (!this.showAudioPlayer) {
+      this.audioPlaying = false;
+      this.stopAudioRaf();
+    }
+    this.cdr.markForCheck();
   }
 
   goToRecordingSession(): void {
