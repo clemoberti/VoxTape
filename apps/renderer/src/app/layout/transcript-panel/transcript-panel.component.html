@@ -14,16 +14,21 @@
       <button class="play-btn" (click)="togglePlay(audioEl)">
         {{ audioPlaying ? '&#10074;&#10074;' : '&#9654;' }}
       </button>
-      <input
-        type="range"
-        class="seek-bar"
-        [min]="0"
-        [max]="audioDuration"
-        [value]="audioCurrentTime"
-        step="0.1"
-        [style.--seek-progress]="audioDuration ? (audioCurrentTime / audioDuration * 100) + '%' : '0%'"
-        (input)="seekAudio(audioEl, $any($event.target).value)"
-      />
+      <div class="seek-container" (mousemove)="onSeekHover($event)" (mouseleave)="seekTooltip = null">
+        @if (seekTooltip) {
+          <div class="seek-tooltip" [style.left.px]="seekTooltip.x">{{ seekTooltip.time }}</div>
+        }
+        <input
+          type="range"
+          class="seek-bar"
+          [min]="0"
+          [max]="audioDuration"
+          [value]="audioCurrentTime"
+          step="0.1"
+          [style.--seek-progress]="audioDuration ? (audioCurrentTime / audioDuration * 100) + '%' : '0%'"
+          (input)="seekAudio(audioEl, $any($event.target).value)"
+        />
+      </div>
       <span class="audio-time">{{ formatTime(audioCurrentTime * 1000) }} / {{ formatTime(audioDuration * 1000) }}</span>
       <button
         class="retranscribe-btn"

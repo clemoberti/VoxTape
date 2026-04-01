@@ -43,6 +43,7 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
   audioCurrentTime = 0;
   audioDuration = 0;
   isRetranscribing = false;
+  seekTooltip: { x: number; time: string } | null = null;
   private audioRafId: number | null = null;
   private readonly session = inject(SessionService);
   private readonly ipc = inject(ElectronIpcService);
@@ -194,6 +195,15 @@ export class TranscriptPanelComponent implements OnInit, OnDestroy, OnChanges, A
       cancelAnimationFrame(this.audioRafId);
       this.audioRafId = null;
     }
+  }
+
+  onSeekHover(event: MouseEvent): void {
+    const container = event.currentTarget as HTMLElement;
+    const rect = container.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    const time = ratio * this.audioDuration;
+    this.seekTooltip = { x: event.clientX - rect.left, time: this.formatTime(time * 1000) };
+    this.cdr.markForCheck();
   }
 
   seekAudio(audioEl: HTMLAudioElement, value: number): void {
